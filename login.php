@@ -11,13 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        .login-dark {
-        height:1000px;
-        background:#475d62 url(../../assets/img/star-sky.jpg);
-        background-size:cover;
-        position:relative;
-        }
-
         .login-dark form {
         max-width:320px;
         width:90%;
