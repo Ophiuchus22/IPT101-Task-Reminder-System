@@ -56,7 +56,8 @@ if ($email_exists) {
 
 // Check if the password is empty or invalid
 if (empty($password) || strlen($password) < 6 || !validatePassword($password)) {
-    header("Location: registration.php?error=Invalid password");
+    header("Location: registration.php?error=Password should contain a minimum of six characters, one letter, one digit, and a special symbol");
+
     exit();
 }
 
