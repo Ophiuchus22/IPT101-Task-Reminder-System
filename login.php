@@ -1,3 +1,6 @@
+<?php
+require_once'config.php';  //include the config file
+?>
 <!DOCTYPE html>
 <html>
 
@@ -115,10 +118,10 @@
             <a href="registration.php" class="register-link">Don't have an account? <span>Register</span></a>
             <div class="or-separator">or</div>
             <div class="social-icons">
-                <a href="#" onclick="return false;"> 
+                <a href="#" onclick="window.location = '<?php echo $login_url; ?>'"> 
                     <i class="fab fa-google"></i>
                 </a>
-                <a href="#" onclick="return false;"> 
+                <a href="facebook-login.php"> 
                     <i class="fab fa-facebook-f"></i>
                 </a>
             </div>
