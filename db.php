@@ -1,4 +1,14 @@
 <?php
+
+// 
+// File name: db.php
+// Purpose: This PHP script establishes a connection to the database.
+// Author name: Michael Darunday, Ebszar Lapaz, and Loyd Oliver Pino
+// Date of creation or last modification: 
+// Brief overview: This script sets up the connection parameters for the database and -
+// establishes a connection, providing feedback on success or failure.
+//
+
 //Database connection parameters
 $sname = "localhost:3307"; // Server name and port
 $uname = "root"; // Database username
