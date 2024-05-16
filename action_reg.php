@@ -86,13 +86,13 @@ if(mysqli_query($conn, $sql)){
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';  // SMTP server address
         $mail->SMTPAuth = true;
-        $mail->Username = 'parsival143251@gmail.com';;  // SMTP username
-        $mail->Password = 'hjsvffgmdwiogwtd';  // SMTP password
+        $mail->Username = 'ipt101emailsender@gmail.com';;  // SMTP username
+        $mail->Password = 'ndagxzysbqmoowxp';  // SMTP password
         $mail->SMTPSecure = 'tls';          // Enable TLS encryption
         $mail->Port = 587;                  // TCP port to connect to
 
         // Email content
-        $mail->setFrom('parsival143251@gmail.com');
+        $mail->setFrom('ipt101emailsender@gmail.com', 'Task Reminder');
         $mail->addAddress($email);
         $mail->isHTML(true);
         $mail->Subject = 'Email Verification';
@@ -112,3 +112,5 @@ if(mysqli_query($conn, $sql)){
 // Close the database connection
 mysqli_close($conn);
 ?>
+email:ipt101emailsender@gmail.com
+password:ipt101email
