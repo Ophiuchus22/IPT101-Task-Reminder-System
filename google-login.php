@@ -44,10 +44,6 @@ if (isset($_GET['code'])) {
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['username'] = $username;
 
-            $insert_profile_query = "INSERT INTO user_profile (user_id, username, First_name, Lastname, Email, profile_picture) 
-                                      VALUES ('$user_id', '$username', '$first_name', '$last_name', '$email', '$profile_picture')";
-            mysqli_query($conn, $insert_profile_query);
-
             header("Location: reminder.php"); // Redirect to the desired page after registration
             exit;
         } else {
