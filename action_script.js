@@ -106,4 +106,45 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("Error storing reminder: " + error);
       });
     }
+
+    
+  // Function to delete a reminder
+  window.deleteReminder = function(button) {
+    var row = button.parentNode.parentNode;
+    var title = row.cells[0].innerHTML;
+    var description = row.cells[1].innerHTML;
+    var dateTimeString = row.cells[2].innerHTML;
+    var [date, time] = dateTimeString.split(" ");
+    
+    if (confirm("Are you sure you want to delete this reminder?")) {
+      row.remove();
+      deleteReminderFromDB(title, description, date, time);
+    }
+  };
+
+  // Function to delete reminder details from the database
+  function deleteReminderFromDB(title, description, date, time) {
+    fetch('delete_reminder.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        date: date,
+        time: time
+      })
+    }).then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Reminder deleted successfully");
+      } else {
+        console.error("Failed to delete reminder: " + data.error);
+      }
+    }).catch(error => {
+      console.error("Error deleting reminder: " + error);
+    });
+  }
+  
   });
