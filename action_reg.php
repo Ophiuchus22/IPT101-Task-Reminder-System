@@ -28,8 +28,8 @@ function validateUsername($username) {
 
 // Function to validate password format
 function validatePassword($password) {
-    // Check if password contains at least one letter, one digit, and one of the specified symbols
-    return preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#$*]).{6,}$/', $password);
+    // Check if password contains at least one letter and one digit, and is at least six characters long
+    return preg_match('/^(?=.*[A-Za-z])(?=.*\d).{6,}$/', $password);
 }
 
 // Function to validate email format
@@ -55,9 +55,8 @@ if ($email_exists) {
 }
 
 // Check if the password is empty or invalid
-if (empty($password) || strlen($password) < 6 || !validatePassword($password)) {
+if (empty($password) || !validatePassword($password)) {
     header("Location: registration.php?error=Password should contain a minimum of six characters, one letter, one digit, and a special symbol");
-
     exit();
 }
 
