@@ -107,6 +107,82 @@ document.addEventListener("DOMContentLoaded", function() {
       });
     }
 
+    // Function to edit a reminder
+window.editReminder = function(button) {
+  var row = button.parentNode.parentNode;
+  var titleCell = row.cells[0];
+  var descriptionCell = row.cells[1];
+  var dateTimeCell = row.cells[2];
+  var modal = document.getElementById("editModal");
+  var closeButton = document.getElementsByClassName("close")[0];
+
+  document.getElementById("editTitle").value = titleCell.innerText;
+  document.getElementById("editDescription").value = descriptionCell.innerText;
+  document.getElementById("editDateTime").value = dateTimeCell.innerText;
+
+  modal.style.display = "block";
+
+  closeButton.onclick = function() {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  var form = document.getElementById("editForm");
+  form.onsubmit = function(event) {
+    event.preventDefault();
+    handleEditFormSubmit(titleCell, descriptionCell, dateTimeCell);
+  };
+};
+
+  // Function to handle form submission
+  function handleEditFormSubmit(titleCell, descriptionCell, dateTimeCell) {
+    var title = document.getElementById("editTitle").value;
+    var description = document.getElementById("editDescription").value;
+    var dateTimeString = document.getElementById("editDateTime").value;
+
+    if (title && description && dateTimeString) {
+      titleCell.innerText = title;
+      descriptionCell.innerText = description;
+      dateTimeCell.innerText = dateTimeString;
+
+      var [date, time] = dateTimeString.split(" ");
+      updateReminder(title, description, date, time);
+      
+      var modal = document.getElementById("editModal");
+      modal.style.display = "none";
+    }
+  }
+
+  // Function to update reminder details in the database
+  function updateReminder(title, description, date, time) {
+    fetch('update_reminder.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        date: date,
+        time: time
+      })
+    }).then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Reminder updated successfully");
+      } else {
+        console.error("Failed to update reminder: " + data.error);
+      }
+    }).catch(error => {
+      console.error("Error updating reminder: " + error);
+    });
+  }
+
     
   // Function to delete a reminder
   window.deleteReminder = function(button) {
