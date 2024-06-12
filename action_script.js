@@ -46,14 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var scheduledTime = new Date(dateTimeString);
     var currentTime = new Date();
     var timeDifference = scheduledTime - currentTime;
-    alert("Time Difference:" + timeDifference);
     if (timeDifference > 0) {
-      // Add reminder to the table
-      // addReminder(title, description, dateTimeString);
-      // Schedule the reminder notification
       var timeoutId = setTimeout(function () {
         document.getElementById("notificationSound").play();
-        // Show notification if permission is granted
         if (Notification.permission === "granted") {
           var notification = new Notification(title, {
             body: description,
@@ -99,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     actionCell.innerHTML =
       '<button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editReminder(this)"><i class="bi bi-pencil-square"></i></button><button class="btn btn-danger" onclick="deleteReminder(this)"><i class="bi bi-trash3-fill"></i></button>';
   }
+  
   function storeReminder(title, description, date, time) {
     const formData = new FormData();
     formData.append('title', title);

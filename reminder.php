@@ -54,26 +54,61 @@ $stmt->close();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-      
+  <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-          body {
-        font-family: 'Poppins', sans-serif;
+
+    body {
+      font-family: 'Poppins', sans-serif;
     }
 
-    .logout-button {
-        position: absolute;
-        top: 10px;
-        left: 10px;
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -200px; /* Start from the left outside of the screen */
+      height: 100%;
+      width: 200px;
+      background-color: #6c757d;
+      padding: 20px;
+      overflow: auto;
+      transition: all 0.3s ease;
     }
-    </style>
+
+    .sidebar.active {
+      transform: translateX(200px); /* Slide in from the left */
+    }
+
+    .menu-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+    }
+
+    .sidebar-button {
+      text-align: left;
+      width: 100%;
+      margin-bottom: 10px;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+    }
+
+    .sidebar-button:hover {
+      background-color: #5a6268;
+    }
+    
+  </style>
 </head>
 
 <body>
 
-  <div class="logout-button">
+  <button class="btn btn-primary menu-btn">Menu</button>
+
+  <div class="sidebar">
+    <form action="change_pass.php" method="post">
+      <button type="submit" class="sidebar-button">Change Password</button>
+    </form>
     <form action="logout.php" method="post">
-      <button type="submit" class="btn btn-danger">Logout</button>
+        <button type="submit" class="sidebar-button">Logout</button>
     </form>
   </div>
 
@@ -125,6 +160,20 @@ $stmt->close();
 
   <audio id="notificationSound" src="notificationsoundeffect.mp3"></audio>
   <script src="action_script.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('.menu-btn').click(function() {
+        $('.sidebar').toggleClass('active');
+        if ($('.sidebar').hasClass('active')) {
+          $('.sidebar').css('left', '-200px'); // Slide in from the left
+        } else {
+          $('.sidebar').css('left', '-200px'); // Slide out to the left
+        }
+      });
+    });
+  </script>
+
 </body>
 
 
