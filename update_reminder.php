@@ -21,7 +21,7 @@ $description = $data['description'];
 $date = $data['date'];
 $time = $data['time'];
 // Determine the status based on the date and time
-$status = (strtotime("$date $time") < time()) ? 'completed' : 'pending';
+$status = (strtotime("$date $time") < time()) ? 'Completed' : 'Pending';
 
 // Prepare an SQL statement to update the reminders table
 $sql = "UPDATE reminders SET title = ?, description = ?, date = ?, time = ?, status = ? WHERE id = ?";

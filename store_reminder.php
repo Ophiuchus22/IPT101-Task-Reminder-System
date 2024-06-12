@@ -15,6 +15,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 header('Content-Type: application/json');
 
+// Start the session to access session variables
+session_start();
 
 // Include the database connection file
 include 'db.php';
@@ -26,30 +28,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
     $date = $_POST['date'];
     $time = $_POST['time'];
-    $status = "pending";
-
+    $status = "Pending";
+    $user_id = $_SESSION['user_id']; // Get the logged-in user's ID from the session
 
     // SQL query to insert data into reminders table
-    $sql = "INSERT INTO reminders (title, description, date, time, status)
-            VALUES ('$title', '$description', '$date', '$time','$status')";
+    $sql = "INSERT INTO reminders (title, description, date, time, status, user_id)
+            VALUES (?, ?, ?, ?, ?, ?)";
 
     // Check if the connection is still open
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
+    // Prepare the statement to prevent SQL injection
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    // Bind parameters to the prepared statement
+    $stmt->bind_param("sssssi", $title, $description, $date, $time, $status, $user_id);
+
     // Perform the query
-    if ($conn->query($sql) === TRUE) {
+    if ($stmt->execute()) {
         // Insertion successful
         $response = array("success" => true);
     } else {
         // Insertion failed
-        $response = array("success" => false, "error" => "Error: " . $sql . "<br>" . $conn->error);
+        $response = array("success" => false, "error" => "Error: " . $stmt->error);
     }
 
     // Send JSON response back to the client
-    header('Content-Type: application/json');
     echo json_encode($response);
+
+    // Close the statement
+    $stmt->close();
 } else {
     // Method not allowed
     http_response_code(405);

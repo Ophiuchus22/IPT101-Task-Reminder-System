@@ -5,11 +5,11 @@ header('Content-Type: application/json');
 include 'db.php';
 
 // Update reminders that are in the past to 'completed'
-$update_sql = "UPDATE reminders SET status = 'completed' WHERE CONCAT(date, ' ', time) < NOW()";
+$update_sql = "UPDATE reminders SET status = 'Completed' WHERE CONCAT(date, ' ', time) < NOW()";
 $conn->query($update_sql);
 
 // Fetch reminders that are not in the past
-$sql = "SELECT id,title, description, date, time, status FROM reminders ORDER BY id DESC";
+$sql = "SELECT id, title, description, date, time, status FROM reminders ORDER BY id DESC";
 $result = $conn->query($sql);
 
 $reminders = array();

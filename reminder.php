@@ -6,12 +6,43 @@
 // Brief overview: This file defines the basic UI for a task reminder application, including a form to input class="form-control" reminders and a table to display them.
 -->
 
+<?php
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    // If not logged in, redirect to login page
+    header("Location: login.php");
+    exit();
+}
+
+// Connect to the database
+include "db.php";
+
+$user_id = $_SESSION['user_id']; // Get the logged-in user's ID from the session
+
+// Fetch reminders for the logged-in user
+$sql = "SELECT * FROM reminders WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Fetch reminders and output them in your HTML
+$reminders = [];
+while ($row = $result->fetch_assoc()) {
+    $reminders[] = $row;
+}
+$stmt->close();
+?>
+
+
 <!DOCTYPE html>
 <html>
 
 <head>
   <title>Reminder App</title>
-  <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -25,14 +56,26 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-      body {
-    font-family: 'Poppins', sans-serif;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+          body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .logout-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
     </style>
 </head>
 
-<body class="overflow-hidden">
+<body>
+
+  <div class="logout-button">
+    <form action="logout.php" method="post">
+      <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+  </div>
 
   <div class="row justify-content-center p-3">
     <div class="col-sm-5">
