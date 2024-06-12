@@ -20,11 +20,15 @@ $title = $data['title'];
 $description = $data['description'];
 $date = $data['date'];
 $time = $data['time'];
-// Prepare an SQL statement to update the reminders table.
-$sql = "UPDATE reminders SET title = ?, description = ?, date = ?, time = ?";
+// Determine the status based on the date and time
+$status = (strtotime("$date $time") < time()) ? 'completed' : 'pending';
+
+// Prepare an SQL statement to update the reminders table
+$sql = "UPDATE reminders SET title = ?, description = ?, date = ?, time = ?, status = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
-// Bind the reminder data to the SQL statement parameters.
-$stmt->bind_param("ssss", $title, $description, $date, $time);
+
+// Bind parameters to the prepared statement
+$stmt->bind_param("sssssi", $title, $description, $date, $time, $status, $_GET['id']);
 
 // Execute the SQL statement.
 if ($stmt->execute()) {
