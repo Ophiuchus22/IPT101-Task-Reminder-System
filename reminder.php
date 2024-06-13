@@ -115,7 +115,6 @@ $stmt->close();
     .text-center {
       text-align: center;
     }
-    
   </style>
 </head>
 
@@ -167,7 +166,8 @@ $stmt->close();
 
         <button type="submit" id="button" class="btn btn-primary mt-2" style="width: 100%">Schedule Reminder</button>
       </form>
-
+      <br>
+      <h5>Recent:</h5>
       <table class="table table-bordered mt-2">
         <thead>
           <tr>
