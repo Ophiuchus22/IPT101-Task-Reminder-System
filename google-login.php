@@ -32,17 +32,47 @@ if (isset($_GET['code'])) {
         header("Location: reminder.php"); // Redirect to the desired page after login
         exit;
     } else {
-        // User doesn't exist, create a new account
-        $username = $first_name . $last_name;
-        $password = '';
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        // To generate random default username.
+        function generate_random_username() {
+            $words = ["apple", "brave", "charm", "droid", "eagle", "fable", "gleam", "hatch", "icily", "jolly", "karma", "lucky", "mango", 
+                      "neato", "omega", "pearl", "quark", "risky", "smile", "tango", "ultra", "vivid", "whale", "xenon", "young", "zesty",
+                      "frost", "grape", "honey", "jumpy", "knock", "lemon", "mocha", "nacho", "pinky", "queen", "robot", "sunny", "tiger", 
+                      "unite", "velvet", "wizard", "xylos", "yummy", "zephyr", "azure", "blitz", "coral", "dream", "ember", "flora", "glint", 
+                      "hover", "ivory", "jewel", "kebab", "lyric", "mirth", "novel", "olive", "plume", "quilt", "raven", "swift", "twirl", 
+                      "urban", "valor", "whirl", "xylos", "yacht", "zebra"];
+            $word = $words[array_rand($words)];
+            
+            // Ensure the word is at most 5 letters
+            if (strlen($word) > 5) {
+                $word = substr($word, 0, 5);
+            }
+            // Generate a random number with up to 3 digits
+            $number = rand(0, 999);
+            // Combine word and number ensuring total length is 8 characters
+            $username = $word . $number;
+            // Truncate if necessary to ensure total length is 8 characters
+            $username = substr($username, 0, 8);
+            
+            return $username;
+        }
+        
+        // New User: Create Account
+        // ------------------------
+        $username = generate_random_username(); // Generate a random username.
+        $password = 'user123';                  // Default password..
 
         $insert_query = "INSERT INTO account (username, password, email, verified) 
-                            VALUES ('$username', '$hashed_password', '$email', 1)";
+                            VALUES ('$username', '$password', '$email', 1)";
             if (mysqli_query($conn, $insert_query)) {
                 $user_id = mysqli_insert_id($conn);
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['username'] = $username;
+            
+            // Insert Default Password into Password History
+            $insert_password_history_query = "INSERT INTO password_history (user_id, password, created_at) VALUES ('$user_id', '$password', NOW())"; 
+            if (!mysqli_query($conn, $insert_password_history_query)) {
+                echo "Error: " . mysqli_error($conn); // Display an error if the password history insert fails.
+            }
 
             header("Location: reminder.php"); // Redirect to the desired page after registration
             exit;
