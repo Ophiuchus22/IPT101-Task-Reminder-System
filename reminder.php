@@ -80,9 +80,9 @@ $stmt->close();
     .sidebar {
       position: fixed;
       top: 0;
-      left: -200px; /* Start from the left outside of the screen */
+      left: -250px; /* Start from the left outside of the screen */
       height: 100%;
-      width: 200px;
+      width: 250px;
       background-color: #6c757d;
       padding: 20px;
       overflow: auto;
@@ -124,7 +124,9 @@ $stmt->close();
   <button class="btn btn-primary menu-btn">Menu</button>
 
   <div class="sidebar">
-    <h3 class="text-white text-center"><?php echo htmlspecialchars($username); ?></h3>
+    <h2 class="text-white text-center">Welcome :)</h2>
+    <br>
+    <h4 class="text-white text-center"><?php echo htmlspecialchars($username); ?></h4>
     <br> <br>
 
     <form id="changePasswordForm" method="POST" action="change_pass.php">
@@ -194,7 +196,7 @@ $stmt->close();
       if ($('.sidebar').hasClass('active')) {
         $('.sidebar').css('left', '-200px'); // Slide in from the left
       } else {
-        $('.sidebar').css('left', '-200px'); // Slide out to the left
+        $('.sidebar').css('left', '-250px'); // Slide out to the left
       }
     });
   });

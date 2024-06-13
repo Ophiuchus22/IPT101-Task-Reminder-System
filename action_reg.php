@@ -81,6 +81,17 @@ $sql = "INSERT INTO account (username, password, email, verification_code) VALUE
 
 // Execute the SQL query
 if(mysqli_query($conn, $sql)){
+
+    // Get the user ID of the newly registered user
+    $user_id = mysqli_insert_id($conn);
+
+    // Insert into password_history table
+    $sql_history = "INSERT INTO password_history (user_id, password, created_at) VALUES (?, ?, NOW())";
+    $stmt_history = mysqli_prepare($conn, $sql_history);
+    mysqli_stmt_bind_param($stmt_history, 'is', $user_id, $password);
+    mysqli_stmt_execute($stmt_history);
+    mysqli_stmt_close($stmt_history);
+    
     try {
         // SMTP configuration
         $mail->isSMTP();
