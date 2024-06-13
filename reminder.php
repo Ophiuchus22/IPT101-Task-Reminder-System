@@ -34,6 +34,22 @@ $reminders = [];
 while ($row = $result->fetch_assoc()) {
     $reminders[] = $row;
 }
+
+// Fetch the username for the logged-in user
+$user_sql = "SELECT username FROM account WHERE user_id = ?";
+$user_stmt = $conn->prepare($user_sql);
+$user_stmt->bind_param("i", $user_id);
+$user_stmt->execute();
+$user_result = $user_stmt->get_result();
+
+if ($user_row = $user_result->fetch_assoc()) {
+    $username = $user_row['username'];
+} else {
+    // Handle the case where the username is not found
+    $username = "Unknown User";
+}
+
+$user_stmt->close();
 $stmt->close();
 ?>
 
@@ -95,6 +111,10 @@ $stmt->close();
     .sidebar-button:hover {
       background-color: #5a6268;
     }
+
+    .text-center {
+      text-align: center;
+    }
     
   </style>
 </head>
@@ -104,9 +124,15 @@ $stmt->close();
   <button class="btn btn-primary menu-btn">Menu</button>
 
   <div class="sidebar">
-    <form action="change_pass.php" method="post">
-      <button type="submit" class="sidebar-button">Change Password</button>
+    <h3 class="text-white text-center"><?php echo htmlspecialchars($username); ?></h3>
+    <br> <br>
+
+    <form id="changePasswordForm" method="POST" action="change_pass.php">
+      <button type="button" class="sidebar-button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+        Change Password
+      </button>
     </form>
+
     <form action="logout.php" method="post">
         <button type="submit" class="sidebar-button">Logout</button>
     </form>
@@ -161,22 +187,96 @@ $stmt->close();
   <audio id="notificationSound" src="notificationsoundeffect.mp3"></audio>
   <script src="action_script.js"></script>
 
-  <script>
-    $(document).ready(function() {
-      $('.menu-btn').click(function() {
-        $('.sidebar').toggleClass('active');
-        if ($('.sidebar').hasClass('active')) {
-          $('.sidebar').css('left', '-200px'); // Slide in from the left
-        } else {
-          $('.sidebar').css('left', '-200px'); // Slide out to the left
-        }
-      });
+<script>
+  $(document).ready(function() {
+    $('.menu-btn').click(function() {
+      $('.sidebar').toggleClass('active');
+      if ($('.sidebar').hasClass('active')) {
+        $('.sidebar').css('left', '-200px'); // Slide in from the left
+      } else {
+        $('.sidebar').css('left', '-200px'); // Slide out to the left
+      }
     });
-  </script>
+  });
+</script>
+
+<script>
+  document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent the form from being submitted in the traditional way
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'change_pass.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Handle the response from the server
+        // You might want to update the error and success messages here
+      }
+    };
+    xhr.send(new FormData(e.target));
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+    // Check if there's an error or success message
+    var errorMessage = "<?php echo isset($_SESSION['user_pass_error']) ? $_SESSION['user_pass_error'] : ''; ?>";
+    var successMessage = "<?php echo isset($_SESSION['user_pass_success']) ? $_SESSION['user_pass_success'] : ''; ?>";
+
+    // If there's an error or success message, show the modal
+    if (errorMessage !== '' || successMessage !== '') {
+      $('#changePasswordModal').modal('show');
+    }
+
+    // Remove the message after 4 seconds
+    setTimeout(function() {
+      $('.alert').remove();
+    }, 4000); // 4000 milliseconds = 4 seconds
+  });
+</script>
+
+
 
 </body>
 
-
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <?php if (isset($_SESSION['user_pass_error'])): ?>
+          <div class="alert alert-danger" role="alert">
+            <?php echo $_SESSION['user_pass_error']; unset($_SESSION['user_pass_error']); ?>
+          </div>
+        <?php endif; ?>
+        <?php if (isset($_SESSION['user_pass_success'])): ?>
+          <div class="alert alert-success" role="alert">
+            <?php echo $_SESSION['user_pass_success']; unset($_SESSION['user_pass_success']); ?>
+          </div>
+        <?php endif; ?>
+        <form id="changePasswordForm" method="POST" action="change_pass.php">
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="Current Password" required>
+            <label for="currentPassword">Current Password</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password" required>
+            <label for="newPassword">New Password</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+            <label for="confirmPassword">Confirm Password</label>
+          </div>
+          <button type="submit" class="btn btn-primary">Change Password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
