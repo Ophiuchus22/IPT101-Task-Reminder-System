@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Generation Time: Jun 18, 2024 at 08:45 AM
+-- Generation Time: Jun 20, 2024 at 03:42 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,7 +42,7 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`user_id`, `username`, `password`, `email`, `verification_code`, `verified`) VALUES
 (6, 'user01', 'user01', 'darundaymichael4@gmail.com', '331f74c57ec8e41570d6ccc135fe6437', 1),
-(7, 'user02', 'user02', 'ghams234@gmail.com', '174d588b137598f2337f73973216beef', 1);
+(12, 'user02', 'user02', 'parsival143251@gmail.com', '61c7e5271de036d01166dc897ee54de9', 1);
 
 -- --------------------------------------------------------
 
@@ -63,7 +63,7 @@ CREATE TABLE `password_history` (
 
 INSERT INTO `password_history` (`id`, `user_id`, `password`, `created_at`) VALUES
 (3, 6, 'user01', '2024-06-13 13:45:34'),
-(4, 7, 'user02', '2024-06-13 13:57:43');
+(8, 12, 'user02', '2024-06-19 05:34:13');
 
 -- --------------------------------------------------------
 
@@ -80,15 +80,6 @@ CREATE TABLE `reminders` (
   `status` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `reminders`
---
-
-INSERT INTO `reminders` (`id`, `title`, `description`, `date`, `time`, `status`, `user_id`) VALUES
-(89, 'Holy', 'cow', '2024-06-13', '20:04:00', 'Completed', 6),
-(90, 'aww', 'aww', '2024-06-13', '22:02:00', 'Completed', 7),
-(91, 'Alarm', 'Alarm', '2024-06-15', '19:42:00', 'Completed', 6);
 
 --
 -- Indexes for dumped tables
@@ -122,19 +113,19 @@ ALTER TABLE `reminders`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `password_history`
 --
 ALTER TABLE `password_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `reminders`
 --
 ALTER TABLE `reminders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- Constraints for dumped tables
