@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         fetchReminders();
       }
-
     });
   }
 
@@ -41,11 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var description = document.getElementById("description").value;
     var date = document.getElementById("date").value;
     var time = document.getElementById("time").value;
-    // Combine date and time into a single string and convert to Date object
     var dateTimeString = date + " " + time;
     var scheduledTime = new Date(dateTimeString);
     var currentTime = new Date();
     var timeDifference = scheduledTime - currentTime;
+
     if (timeDifference > 0) {
       var timeoutId = setTimeout(function () {
         document.getElementById("notificationSound").play();
@@ -54,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             body: description,
             requireInteraction: true,
           });
+          sendEmailNotification(title, description, date, time);
         } else {
           console.error("Notification permission is not granted.");
         }
@@ -63,12 +63,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Store the reminder in the database
       storeReminder(title, description, date, time);
-      
-
     } else {
       alert("The scheduled time is in the past!");
     }
   }
+
+  // Function to send email notification
+  function sendEmailNotification(title, description, date, time) {
+    console.log("Sending email notification...");
+    fetch('send_notification.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title: title,
+            description: description,
+            date: date,
+            time: time
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            console.log("Email notification sent successfully");
+        } else {
+            console.error("Failed to send email notification: " + data.error);
+        }
+    })
+    .catch(error => {
+        console.error("Error sending email notification:", error);
+    });
+}
+
 
   // Function to add reminder details to the table
   function addReminder(id,title, description, dateTimeString,status) {
@@ -120,11 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-
-
-
-
-
   function fetchReminders() {
     fetch('fetch.php')
       .then(response => response.json())
@@ -171,11 +198,6 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("The scheduled time for this reminder is in the past!");
     }
   }
-
-
-
-
-
 
   // Function to edit a reminder
   window.editReminder = function (button) {
