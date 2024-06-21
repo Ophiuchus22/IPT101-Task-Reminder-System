@@ -53,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
             body: description,
             requireInteraction: true,
           });
-          sendEmailNotification(title, description, date, time);
         } else {
           console.error("Notification permission is not granted.");
         }
@@ -64,24 +63,25 @@ document.addEventListener("DOMContentLoaded", function () {
       // Store the reminder in the database
       storeReminder(title, description, date, time);
     } else {
-      alert("The scheduled time is in the past!");
+      // alert("The scheduled time is in the past!");
     }
   }
 
   // Function to send email notification
   function sendEmailNotification(title, description, date, time) {
     console.log("Sending email notification...");
+
     fetch('send_notification.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            title: title,
-            description: description,
-            date: date,
-            time: time
-        })
+          title: title,
+          description: description,
+          date: date,
+          time: time
+      })
     })
     .then(response => {
         if (!response.ok) {
@@ -160,6 +160,16 @@ document.addEventListener("DOMContentLoaded", function () {
           var dateTimeString = reminder.date + " " + reminder.time;
           addReminder(reminder.id,reminder.title, reminder.description, dateTimeString,reminder.status);
           reScheduleReminder(reminder.title, reminder.description, reminder.date, reminder.time);
+
+        var scheduledTime = new Date(dateTimeString);
+        var currentTime = new Date();
+        var timeDifference = scheduledTime - currentTime;
+        console.log(timeDifference);
+
+        if (timeDifference < 0 && timeDifference > -5000) {
+          sendEmailNotification(reminder.title, reminder.description, reminder.date, reminder.time);
+        }
+
         });
       })
       .catch(error => {
@@ -317,6 +327,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error deleting reminder: " + error);
       });
   }
+
+  
 
 });
 
